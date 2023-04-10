@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <style>
+        body {
+            background-color: #FF6B6B;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .form-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 50px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+        .form-container:before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            z-index: -1;
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            border-radius: 20px;
+        }
+        .form-container h2 {
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 30px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .form-container label {
+            display: block;
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .form-container input[type="text"],
+        .form-container input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #f5f5f5;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .form-container input[type="submit"] {
+            background-color: #FFD700;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-container input[type="submit"]:hover {
+            background-color: #FFA500;
+        }
+        .img-container {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: 50%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde') center center / cover no-repeat;
+            border-radius: 0 10px 10px 0;
+            transition: transform 0.3s;
+        }
+        .img-container:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-container">
+        <h2>Login</h2>
+        <form action="" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password
+                :</label>
+            <input type="password" id="password" name="password" required>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

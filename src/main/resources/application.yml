@@ -1,0 +1,124 @@
+server:
+  jetty:
+    threads:
+      acceptors: 4
+      selectors: 8
+  port: 8090
+  servlet:
+    context-path: /emos-api
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 2MB
+
+spring:
+  # activiti配置
+  activiti:
+    #自动更新数据库结构
+    # true：适用开发环境，默认值。activiti会对数据库中所有表进行更新操作。如果表不存在，则自动创建
+    # false：适用生产环境。activiti在启动时，对比数据库表中保存的版本，如果没有表或者版本不匹配，将抛出异常
+    # create_drop： 在activiti启动时创建表，在关闭时删除表（必须手动关闭引擎，才能删除表）
+    # drop-create： 在activiti启动时删除原来的旧表，然后在创建新表（不需要手动关闭引擎）
+    database-schema-update: true
+    # activiti7与springboot整合后默认不创建历史表，需要手动开启
+    db-history-used: true
+      # 记录历史等级 可配置的历史级别有none, activity, audit, full
+      # none：不保存任何的历史数据，因此，在流程执行过程中，这是最高效的。
+    # activity：级别高于none，保存流程实例与流程行为，其他数据不保存。
+    # audit：除activity级别会保存的数据外，还会保存全部的流程任务及其属性。
+    # full：保存历史数据的最高级别，除了会保存audit级别的数据外，还会保存其他全部流程相关的细节数据，包括一些流程参数等。
+    history-level: full
+    # 是否自动检查resources下的processes目录的流程定义文件
+
+      # 关闭不自动添加部署数据 SpringAutoDeployment
+    deployment-mode: never-fail
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/emos?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+      username: root
+      password: 123456
+      initial-size: 2
+      max-active: 4
+      min-idle: 4
+      max-wait: 60000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+#    password: Pw_123456
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: -1ms
+        max-idle: 16
+        min-idle: 8
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: emos
+      authentication-database: admin
+      username: admin
+      password: 123456
+  sa-token:
+    # token名称 (同时也是cookie名称)
+    token-name: token
+    # token有效期，单位s 默认7天, -1代表永不过期
+    timeout: 604800
+    # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+    activity-timeout: -1
+    # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+    allow-concurrent-login: true
+    # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+    is-share: false
+    # token风格
+    token-style: uuid
+
+
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.example.emos.wx.db.pojo
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+#
+logging:
+  level:
+    root: info
+    com.example.emos.wx.db.dao: warn
+  pattern:
+    console: "%d{yyyy/MM/dd HH:mm:ss}  %-5level  %msg%n"
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /doc-api.html
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: on
+
+alipay:
+  url: https://openapi.alipaydev.com/gateway.do
+  appId: 2021000118681715
+  appPrivateKey: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCCEpHj0WtApoEinEKakzLy8/Vp+vyMYblysvTla6VYxea06DNamN5XZHK1IClNB6vgYRgP+4aFBahEVvldptJHS2ja26eDcKKOVtf0Y9perEFCq6/0dXD1RSQgnODAsw6mjOllWas+QvnGNNCDxUaA2bVdAJy1meOxUDgp0K7oWcT7D7WAbzGQ33wCpmRzFzJKwJ+N0oPx0S1AzQnLQv74oTFMhLxfZdb+QgIebnDjWdkhdIKeKInABdbZFiLg3DnWwhV/gqurXshPVodPeYuGjYl1kVVB55AUtgZcIrzWQSZonXJzdNbF4OTNT0QrUqIjh10F+9m4WMg9hCmZzJ/tAgMBAAECggEARKhKq6ch5sk8xqkWmwLx1L4jH2LlJbB7s+h0ThkI+RfVFE6wtLSWQCj8R1EHm+pdth1qFx2cPuDildgW3nEs84cBfOyOulmc5GdArHZ8kJZ6CBgZ036eNkjdrf1AwVaCeDVPCTlQo5e0wgOkwLlD4sWH7uRg05a8Uh7W1nOZr3jYcaVqHalTLCyXwygeJo2Wh5dSL4EVcva7gS8G7Thgo5oo+OvqceHbeqrIZIyRhXPV/FSe4YIrqWzrnBHXA4D/Knd5noayD6DSv2NAmwBbE0lXGKLowKKt6b7qbLSnhXejHlO1bAySDt1v0is1jublyY5irfqpqdZ156xep6CrPQKBgQDR5V6CU2UOw8W9ONoPVMxSi+UKAgSx9eKWNBt7RPdjHWbFHs6n1Kg8Z27UTeMQxcCxL1M4eWKME8hmZ3VZ3NCxpBjdvDdkEomd4yckZyORy5xGjVT7H/MlVFLuwmoiaQbZ09w5vfpj+fs6z7jGnSYSo2iaiYmrxKXs2jXNWZpUdwKBgQCepKkRldFY0embRLvIdmU9pasIPOZJP2ZJfqATiVePuE63qzjMEmiq35kSL8tlMS1K9odcaB+fYXKlvb6hU0IaxeS5LDEKhujvx94wmwZXAb0IyPoHACWUr6QxFSiAihSa2Our9q7KTWJ3OEHtxBMkhnI4EUOrxrftmWLA1hK7uwKBgQCR3uAhnqd67V+9M4eIZBxjucmBfQmaTBIe5TO8JZ/wB/zmPZTNWqNY52FEtqR5gZV7DjK96s4sH4uEb55Ex4taCXsmjqnIKIHvcnA/glZb+q8u8QYASKIIbWP9fquYInmaZPyGPJuJY6/PnZECpzBQf7QwwiklcNMHmlcN0ZnJ3QKBgEbAUNaS5maiV3jz0nu4sbYoqHpoDpwkNk4YtvN/kRl7rT+kkRQSMbPjPLUrs55RrE1+XSgNF+1Q3Hymftob86NVFoiu+MAlIsWtcZ5jxRQQpmnAmCF/I0OIgcWSFhodessEazaqMZHvqTZaVKzhgVgMzevLZ064tVa1zaEK2Bf5AoGBALLoSBi+BcwMSaLG8vHY+hQFQxCf9yx/mEeAH5T1xIAddaZNTgxWwh8IXLpYDWCvRNumT/0sYIH/v59XtEkQSZNPmzD/csj4KptT7MaBkpt4w7i8aRFbC3kpj3VXkXJDTy0FXjuIVCD2EtcbX8oOaJt5/UzX7VnvgXdov3kSZA08
+  alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkumFzM1nDofYanNSs0aW5BoPKi63FPzzHObo+MfGuBPh57fqoO7jJs/G4Lvez0yEbX6u2NLVK/GN2zLTqnxZsiEpHt+gLze9KTFNrxmDJ8rIrE5lAIllFDUVjXmS/mr4ePkzOiLY2GsqswomaBf30lcFo0NV8PJlDe+sK4RCU+z/joezgAEIEB5WlzBVJ8egjDQ5IdKlurb0T1Hq89svjrCiDZulCc1W611dgYadKU+48sgoIxNaNOFrWcwPtHHi2Tka6dnutM4bcEnpfrCieu/Cnan2lLqFdiR0XHxgYpwbSVkKeDTXsK/4uqdqW42+SoekiQy+NLs+9hH6367wbQIDAQAB
+  notifyUrl: http://df735g.natappfree.cc/emos-api/amect/recieveMessage
+
+#以下是腾讯实时音视频配置，基于人与人之间的信任原则，
+#如果已经体验过一次音视频通话之后希望你本人用回自己的，本人的腾讯音视频时长也不多【抱拳】
+tencent:
+  cloud:
+    appId: 1309385048
+    secretId: AKIDWrxnMfiTxA5kGXXHkwrWu2tVsxlIZZIk
+    secretKey: D9oCKCoAF4bste8LH3YmjOnvmMgjVzDA
+    region: ap-guangzhou
+    bucket: emos-1309385048
+  trtc:
+    appId: 1400644119
+    secretKey: 17428c81b9d3aa9fc3cbb870780f5fcafb06d00600c3ce5c784d7fa85e8ea4f6
+    expire: 86400
